@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="cn.com.maptrack2"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="18" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.VIBRATE" />
+	
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"></uses-permission>    
+ 	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>    
+ 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>    
+ 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>    
+ 
+    
+	<uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+    <application
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:icon="@drawable/ic_launcher"
+		android:hardwareAccelerated="true" 
+        android:label="@string/app_name" >
+        <activity
+            android:label="@string/app_name" 
+            android:name="DogGoActivity" > 
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> 
+        
+         <activity android:name="DeviceControlActivity"/>
+         <activity android:name="DeviceList"></activity>
+         <service android:name="BluetoothLeServiceM"></service>
+         <service android:name="SoundService"></service>
+    </application>
+
+</manifest>

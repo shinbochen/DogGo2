@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:stretchColumns="2" >
+	
+    
+    <TableRow android:layout_height="36dp" >
+
+    <ImageView
+        android:id="@+id/id_lst_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="2dp"/>
+
+    <Space  android:layout_width="3dp"/>
+
+    <TextView
+        android:id="@+id/id_lst_name"
+   		android:gravity="center_vertical|left"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp" />
+    
+    <Space  android:layout_width="3dp"/>
+    <TextView
+        android:id="@+id/id_lst_addr"
+   		android:gravity="center_vertical|left"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp" />
+    <TextView
+        android:id="@+id/id_lst_rssin"
+   		android:gravity="center_vertical|left"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp" />
+    
+ 	<ImageView
+        android:id="@+id/id_lst_rssi"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="2dp"/>
+
+ 	
+ 	<ImageView
+        android:id="@+id/id_lst_connected"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="2dp"/>
+	</TableRow>
+</TableLayout>

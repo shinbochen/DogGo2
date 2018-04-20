@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="css/user.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+<script src="js/jquery.mobile-1.4.5.min.js"></script>
+<script src="js/jquery.flot.min.js"></script>
+<script src="js/jquery.tmpl.js"></script>
+<script src="js/lang.js"></script>
+<script src="js/constant.js"></script>
+<script>
+
+
+function changePage( pageid ){
+	$.mobile.changePage( pageid );
+	//$.mobile.changePage( "#page_device_detail", { transition: "slideup"} );
+}
+
+function displayOption0( tag, data ){
+	
+
+	$(tag).find("h3").text(data.name+':'+lang.shock+lang.level);	
+	$(tag+" input:first").val( parseInt(data.shockLvl) ).slider("refresh");
+	$(tag+' input:first').bind('change', function(){
+		
+		var value = $(this).val();
+		alert( value );
+		//gApp.changeShock(gData.getLast(), value );
+		
+	});
+	$(tag).fadeIn('slow');
+}
+function displayOption2( tag, data ){
+	$(tag).find("h3").text(data.name+':'+lang.voice+lang.level);	
+	$(tag+" input:first").val( parseInt(data.voiceLvl) ).slider("refresh");
+		
+	var s = $(tag+" select").html().trim();
+		
+	if( s.length == 0 ){
+		voicetype.forEach( function(v){
+			 $(tag+" select").append("<option value='"+v.v+"'>"+v.n+"</option>");
+		});
+	}
+	
+	$(tag+" select").val( data.voiceType ).selectmenu("refresh");	
+	$(tag+' input:first').bind('change', function(){
+		//alert( $(this).val() );
+		gApp.changeVoiceLvl(gData.getLast(), $(this).val() );
+	});
+	
+	
+	$(tag+' select').bind('change', function(){
+		//alert( $(this).val() );
+		gApp.changeVoiceType(gData.getLast(), $(this).val() );
+		
+	});	
+	$(tag).fadeIn('slow');
+}
+
+/*
+<div id ='option_3'>
+      <h3>slient</h3>
+      <div data-role="collapsible">
+      	<h4>input</h4>
+	      <div class="ui-grid-a">
+	      	<div class="ui-block-a">
+					<label for="op_vid_30" id='op_label30'>Option</label>
+					<input type="range" id="op_vid_30" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>
+					
+	      	<div class="ui-block-b">
+					<label for="op_vid_31" id='op_label31'>Option2</label>
+					<input type="range" id="op_vid_31" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>	
+						
+				</div>
+			
+			</div>
+			
+      <div data-role="collapsible">
+      	<h4>control</h4>
+				<div data-role="controlgroup" data-type="horizontal">
+					<label for="option_3_btn1">shock</label>
+					<input type="checkbox" id="option_3_btn1" data-mini="true" >
+					<label for="option_3_btn2">vribtion</label>
+					<input type="checkbox" id="option_3_btn2" data-mini="true">
+				</div>
+			
+	      <div class="ui-grid-a">
+	      	
+	      	<div class="ui-block-a">
+					<label for="op_vid_32" id='op_label32'>Option</label>
+					<input type="range" id="op_vid_32" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>
+					
+	      	<div class="ui-block-b">
+					<label for="op_vid_33" id='op_label34'>Option2</label>
+					<input type="range" id="op_vid_33" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>	
+						
+				</div>
+			</div>
+		</div>
+*/
+function displayOption3( tag, data ){
+	$(tag).find("h3").text(data.name+':'+lang.silent+lang.setup);	
+	$(tag).find("h4:eq(0)").find("a").text( lang.silent+lang.condition);	
+	$(tag).find("h4:eq(1)").find("a").text( lang.silent+lang.stimulus);	
+	
+	$('#option_3_btn1').parent().find("label").text(  lang.shock );
+	$('#option_3_btn2').parent().find("label").text(  lang.vibration );
+	
+	$('#op_label30').text( lang.noise + lang.sensor);
+	$('#op_label31').text( lang.vibration + lang.sensor );
+	$('#op_label32').text( lang.shock + lang.level );
+	$('#op_label33').text( lang.vibration + lang.level );
+	
+	
+	
+	
+	$('#op_vid_30').val( parseInt(data.slientNoiseI) ).slider("refresh");
+	$('#op_vid_31').val( parseInt(data.slientVibrationI) ).slider("refresh");
+	$('#op_vid_32').val( parseInt(data.slientShockO) ).slider("refresh");
+	$('#op_vid_33').val( parseInt(data.slientVibrationO) ).slider("refresh");
+	
+	
+	function show1( flag ){
+			if( flag ){
+				$('#op_vid_32').parent().show('slow');
+				$('#op_label32').parent().show('slow');
+			}
+			else{
+				$('#op_vid_32').parent().hide('slow');
+				$('#op_label32').parent().hide('slow');
+			}
+	}
+	
+	function show2( flag ){
+			if( flag ){
+				$('#op_vid_33').parent().show('slow');
+				$('#op_label33').parent().show('slow');
+				
+			}
+			else{
+				$('#op_vid_33').parent().hide('slow');
+				$('#op_label33').parent().hide('slow');
+			}
+	}
+	
+	
+	var m = parseInt(data.slientMode);
+	
+	if( (m&0x01) > 0 ){
+		$('#option_3_btn1').prop('checked', true).checkboxradio("refresh"); 		
+		show1( true );
+	}
+	else{
+		$('#option_3_btn1').prop('checked', false).checkboxradio("refresh"); 		
+		show1( false );	
+	}
+	
+	if( (m&0x02) > 0 ){
+		$('#option_3_btn2').prop('checked', true).checkboxradio("refresh"); 			
+		show2( true );			
+	}
+	else{
+		$('#option_3_btn2').prop('checked', false).checkboxradio("refresh"); 				
+		show2( false );		
+	} 
+	
+	// TEST NG
+	
+	$('#option_3_btn1').bind( "click", function(){		
+			var flag = $(this).attr('checked') == 'checked' ? true : false;
+			show1( flag );
+	});
+	$('#option_3_btn2').bind( "click", function(){
+			var flag = $(this).attr('checked') == 'checked' ? true : false;
+			show2( flag );
+	});
+	
+	
+	$('#op_vid_30').bind("change", function(){
+		
+		
+	});
+	$('#op_vid_31').bind("change", function(){
+		
+		
+	});
+	$('#op_vid_32').bind("change", function(){
+		
+		
+	});
+	$('#op_vid_33').bind("change", function(){
+		
+		
+	});
+	
+	$(tag).fadeIn('slow');
+}
+/*
+	<div id='option_4' data-theme="b" >
+      	<h3>anti lost</h3>
+				<select data-role="slider" id="op4_onoff">
+				  <option value="on">On</option>
+				  <option value="off">Off</option>
+				</select>
+	      	 
+				<div>     
+				<input type="range" value="50" min="0" max="100" data-show-value="true">
+		    <select id="op4_musiclst">
+		    </select>
+		    </div>
+				
+		</div>
+		*/
+
+function displayOption4( tag, data ){
+	
+	
+	// inital
+	$(tag).find("h3").text(data.name+':'+lang.antilost+lang.setup);	
+		
+	var s = $("#op4_musiclst").html().trim();		
+	if( s.length == 0 ){
+		musiclist.forEach( function(v){
+			 $("#op4_musiclst").append("<option value='"+v.v+"'>"+v.n+"</option>");
+		});
+	}	
+	
+	
+	// setup
+	$("#op4_distance").val( parseInt(data.antiLostDistLvl) ).slider("refresh");
+	$("#op4_musiclst").val( data.antiLostMusic ).selectmenu("refresh");	
+	
+	
+	
+	// response
+	$("#op4_onoff").bind('change', function(){
+		var v = $(this).val();
+		if( v == "on" ){
+			$("#op4_div").show("slow");
+			gApp.setToAntiLostMode( gData.getLast(), 1 );
+		}
+		else{
+			$("#op4_div").hide("slow");		
+			gApp.setToAntiLostMode( gData.getLast(), 0 );	
+		}
+		updateConnectList( gData.getLast() );
+	});	
+	$("#op4_musiclst").bind('change', function(){
+		gApp.changeAntiLostMusic(gData.getLast(), $(this).val() );		
+	});		
+	$("#op4_distance").bind('change', function(){
+		gApp.changeAntiLostDistance(gData.getLast(), $(this).val() );
+	});
+	$(tag).fadeIn('slow');
+}
+
+function alertMsg( text ){
+	$.mobile.loading('show', {
+		text: text, 	
+		textVisible:true,
+		theme: 'b',    	
+		textonly: true
+	});	
+	setTimeout( function(){$.mobile.loading('hide')}, 1000 );	
+}
+
+function removedoglist( id ){
+	
+	var tag = "div#doglist_section input"+"#"+id;
+	$("div#doglist_section input#id4").parent().remove()
+}
+
+function adddoglist( id, label ){	
+	var str='<input type="checkbox" id="id6"><label for="id6">name6</label>'
+	$("div#doglist_section input:last").parent().parent().append(str); //向ul里面添加元素
+
+	$("div#doglist_section input#id6").bind( 'click',function(){
+		
+		alert('click 6');
+	});
+	alert( $("#doglist_section").html() );
+}
+
+function playmusic( src ){	
+	$('#myaudio').attr('src', src );	
+	document.getElementById("myaudio").addEventListener("canplaythrough", function () {
+		this.play();
+	}, false);	
+}
+
+function stopmusic( ){
+	document.getElementById("myaudio").pause();	
+}
+
+$(document).on("swipe", function(){
+	alert('swipe');
+	var whichPageId = $.mobile.activePage.attr( "id" );
+	alert( whichPageId );
+	stopmusic();
+});
+
+$(document).ready( function(){
+	
+	$('#option_0').hide();
+	$('#option_1').hide();
+	$('#option_2').hide();
+	$('#option_3').hide();
+	
+	//$('#option_4').hide();
+	//$('#myaudio').attr
+	
+	//playmusic( "music/1.mp3" );
+	
+	
+	//displayOption0( '#option_0', {name:'shinbo', shockLvl:80}  );
+	//displayOption2( '#option_2', {name:'shinbo', voiceLvl:80, voiceType:3} );
+				
+	//displayOption3( '#option_3', {name:'shinbo', slientMode:1, slientNoiseI:30, slientVibrationI:40, slientShockO:50, slientVibrationO:60, voiceLvl:80, voiceType:3} );
+	displayOption4( '#option_4', {name:'shinbo', antiLostDistLvl:50, antiLostMusic:4, slientMode:1, slientNoiseI:30, slientVibrationI:40, slientShockO:50, slientVibrationO:60, voiceLvl:80, voiceType:3} );
+	
+	changePage( '#alarm' );
+	
+	// $.mobile.loading('show', {
+	//	text: '正在登陆...', //加载器中显示的文字  
+	//	textVisible: true, //是否显示文字  
+	//	theme: 'a',        //加载器主题样式a-e  
+	//	textonly: false,   //是否只显示文字  
+	//	tml: ""           //要显示的html内容，如图片等  
+	//});
+	
+	//	$.mobile.loading( "show" );
+	
+	//$("div#doglist_section input").bind( 'click',function(){
+	//	alert($(this).attr('id'));
+	//	alert( $(this).attr('checked'))
+	//	var flag = $(this).attr('checked') == 'checked' ? true : false;
+	//	alert( flag );
+	//	$.mobile.changePage( "#page_device_list", { transition: "slideup"} );
+	//} );
+	
+	$("div#btn_section input").bind("tap",function(){
+		//alert( 'ok' );
+		//var address = $(this).attr('id');
+		//alert( address );
+		//var address = $(this).attr('value');
+		//alert( address );
+		//gApp.toggleConnect( address );
+		
+	});            
+	
+	//<div data-role="content" class="ui-content" id='lstbtn'>
+    //<ul data-role="listview" id='id_listview'>
+    //    <li data-icon="star" id="li_a_1"><a href="#" id="bmw" value='bmw1'><h3>BMW</h3><p>已连接</p></a> </li>
+    //    <li id="li_a_2"><a href="#page_device_detail"  id="landrover"><h3>Land Rover</h3><p>可连接</p></a></li>
+    //    <li id="li_b_1"><a href="#" id="tesla"><h3>Tesla</h3><p>不在范围内</p></a></li>
+    //    <li id="li_b_2"><a href="#" id="tesla"><h3>Tesla</h3><p>连接中</p></a></li>
+    //</ul>
+	//</div>
+	
+	$("div#btn_section input").bind( "click", function(){
+		//alert( 'ok1' );
+		//$.mobile.changePage( "#page_device_list", { transition: "slideup"} );
+		// li_b_2
+		$("#lstbtn li:contains('li_a')").parent().remove();
+		$("#lstbtn").trigger( 'create');
+		
+		//var address = $(this).attr('id');
+		//alert( address );
+		//var address = $(this).attr('value');
+		//alert( address );
+		//gApp.toggleConnect( address );
+
+		//var tag = "div#connected_section input#_id5";
+		//var tag = "div#connected_section input[name='name5']";
+		//alert( $(tag) );
+		//alert( $(tag).html() );
+		//$(tag).parent().remove();
+		//$('#connected_section').trigger( 'create');
+		
+		
+		
+	});             
+	//alert( $('#option1 label').html('opdsfaod') );
+			
+	$('#option_section input').bind("change", function(){		
+		//alert( 'change' );
+		//alert($(this).attr("id"));
+		//alert( $(this).val() );
+	})
+	
+	var txts = '<label for="op_vid1" id="op_label1">Option</label>'+
+        	   '<input type="range" name="points" id="op_vid1" value=75  min="0" max="100" data-popup-enabled="true" data-show-value="true">';
+        	   
+		
+	//alert( $('#op_vid1').val()  );
+	//$('#option1').empty();
+	//$('#option1').append(txts);
+	//$('#option1').trigger('create');
+	//$('#option_section').trigger('create');
+	//alert( $('#op_vid2').val()  );
+	//$('#op_vid2').attr( "value", 90 );
+	
+	//$('#id_test').bind( 'click', function(){
+	//	alert($(this).attr('value'));
+	//});
+	//$("#radio-choice-v-2a").bind( 'click', function(){
+	//	alert( 'test' );
+		//alert( $("div#doglist_section input:first").attr('id') );
+		//alert( $("div#doglist_section input#id4").parent().remove() );
+	//	adddoglist('pp');
+		//$("div#doglist_section input").remove();
+	//	$('#doglist_section').trigger('create');
+	//});
+	
+	//$("div#btn_section input").attr( "disabled", "" );
+	//$("div#btn_section input").removeAttr( "disabled" );
+	//$('#btn_section').trigger('create');
+	
+
+	//$("div#btn_section input").removeClass( "disabled" );
+});
+</script>
+</head>
+
+<body>
+<div data-role="page" id="page1">	
+	<div data-role="header">
+    <a href="#page_device_list2" data-role="button" data-rel="fade" data-icon="plus" data-iconpos="notext">add</a>
+    <h1>....</h1>
+    </div>  
+  <!-- /header -->   
+  <div data-role="content" class="ui-btn">
+  	<div data-role="collapsible" id="connected_section">
+	<legend>已连接</legend>
+	<fieldset data-role="controlgroup" data-type="" id="connected_section1">
+	<li>
+				<input type="checkbox" id="id50"><label for="id50"><b>name4</b>  <img src='css/image/battery2.png'></img> <span class="ui-li-count">states</span></label>
+	</li>
+	<li>
+				<input type="checkbox" id="id51"><label for="id51"><b>name5<b>  <img src='css/image/battery1.png'></img> <span class="ui-li-count">states</span> </label>
+	</li>
+	</fieldset>	
+	</div>
+    		
+	<div data-role="option_section" id='option_section' class="ui-btn">
+		
+		
+		<div id ='option_0'>
+      	<h3>shock</h3>
+        <input type="range" value="50" min="0" max="100" data-show-value="true">
+		</div>		
+				
+		<div id ='option_1'>
+      	<h3>vibration</h3>
+        <input type="range" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+		</div>
+		
+		<div id ='option_2' data-role="fieldcontain">
+      <h3>voice</h3>
+	    <select>
+	    </select>
+			<input type="range" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+		</div>
+		
+		<div id ='option_3'>
+      <h3>slient</h3>
+      <div data-role="collapsible">
+      	<h4>input</h4>
+	      <div class="ui-grid-a">
+	      	<div class="ui-block-a">
+					<label for="op_vid_30" id='op_label30'>Option</label>
+					<input type="range" id="op_vid_30" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>
+					
+	      	<div class="ui-block-b">
+					<label for="op_vid_31" id='op_label31'>Option2</label>
+					<input type="range" id="op_vid_31" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>	
+						
+				</div>
+			
+			</div>
+			
+      <div data-role="collapsible">
+      	<h4>control</h4>
+				<div data-role="controlgroup" data-type="horizontal">
+					<label for="option_3_btn1">shock</label>
+					<input type="checkbox" id="option_3_btn1" data-mini="true" >
+					<label for="option_3_btn2">vribtion</label>
+					<input type="checkbox" id="option_3_btn2" data-mini="true">
+				</div>
+			
+	      <div class="ui-grid-a">
+	      	
+	      	<div class="ui-block-a">
+					<label for="op_vid_32" id='op_label32'>Option</label>
+					<input type="range" id="op_vid_32" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>
+					
+	      	<div class="ui-block-b">
+					<label for="op_vid_33" id='op_label33'>Option2</label>
+					<input type="range" id="op_vid_33" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+					</div>	
+						
+				</div>
+			</div>
+		</div>
+		
+		<div id='option_4' data-theme="b" >
+      	<h3>anti lost</h3>
+				<select data-role="slider" id="op4_onoff">
+				  <option value="on">On</option>
+				  <option value="off">Off</option>
+				</select>
+	      	 
+				<div id="op4_div">     
+				<input id="op4_distance" type="range" value="50" min="0" max="100" data-show-value="true">
+		    <select id="op4_musiclst">
+		    </select>
+		    </div>
+				
+		</div>
+		
+    	
+		
+	</div>
+	
+	
+			<fieldset data-role="controlgroup" data-type="horizontal" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">
+<div class="ui-controlgroup-controls ">
+  <div class="ui-checkbox">
+<label for="_btn_0" class="ui-btn ui-corner-all ui-btn-inherit ui-checkbox-off ui-first-child">
+电击</label>
+<input type="checkbox" id="_btn_0" data-mini="false" name="btop" value="0">
+</div>
+  <div class="ui-checkbox">
+<label for="_btn_1" class="ui-btn ui-corner-all ui-btn-inherit ui-checkbox-off">
+震动</label>
+<input type="checkbox" id="_btn_1" data-mini="false" name="btop" value="1">
+</div>
+  <div class="ui-checkbox">
+<label for="_btn_2" class="ui-btn ui-corner-all ui-btn-inherit ui-checkbox-off">
+声控</label>
+<input type="checkbox" id="_btn_2" data-mini="false" name="btop" value="2">
+</div>
+  <div class="ui-checkbox">
+<label for="_btn_3" class="ui-btn ui-corner-all ui-btn-inherit ui-checkbox-off">
+止吠</label>
+<input type="checkbox" id="_btn_3" data-mini="false" name="btop" value="3">
+</div>
+  <div class="ui-checkbox">
+<label for="_btn_4" class="ui-btn ui-corner-all ui-btn-inherit ui-checkbox-off ui-last-child">
+防丢</label>
+<input type="checkbox" id="_btn_4" data-mini="false" name="btop" value="4">
+</div>
+  </div>
+</fieldset>
+<fieldset data-role="controlgroup" data-type="horizontal" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all">
+<div class="ui-controlgroup-controls ">
+  <label for="_btn_exec">执行
+</label>
+<div class="ui-btn ui-input-btn ui-corner-all ui-shadow ui-state-disabled ui-first-child ui-last-child">
+<input type="button" id="_btn_exec" data-mini="false" name="btok" value="执行">
+</div>
+  </div>
+</fieldset>
+
+	
+	
+			
+	<div data-role="footer" id='btn_section' class="ui-btn">
+	<fieldset data-role="controlgroup" data-type="horizontal" id="btn_section1" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all"><div class="ui-controlgroup-controls ">			</div><input type="radio" id="_btn+0" name="btop" value="0"> <label for="_btn+0">电击</label>  <input type="radio" id="_btn+1" name="btop" value="1"> <label for="_btn+1">震动</label>  <input type="radio" id="_btn+2" name="btop" value="2"> <label for="_btn+2">声控</label>  <input type="radio" id="_btn+3" name="btop" value="3"> <label for="_btn+3">止吠</label>  <input type="radio" id="_btn+4" name="btop" value="4"> <label for="_btn+4">防丢</label></fieldset>					<fieldset data-role="controlgroup" data-type="horizontal" id="btn_section2" class="ui-controlgroup ui-controlgroup-horizontal ui-corner-all"><div class="ui-controlgroup-controls ">			</div><input type="button" id="_btn+exec" name="btok" value="执行"> </fieldset>					
+	</div>
+	    
+  </div>   
+  <!-- /content -->   
+  <div data-role='footer' id="foot1" data-position='fixed' data-fullscreen="true">
+	  <div data-role="navbar">
+	      <ul>
+	        <li><a href="#page1" data-icon="minus">训练</a></li>
+	        <li><a href="#page2" data-icon="plus">位置</a></li>
+	      </ul>
+	  </div>
+  </div>
+  <!-- /footer -->
+</div> 
+
+
+<div data-role="page" id="page2">
+	<div data-role="content" id="placeholder">    
+	</div>    
+	<!-- /content -->
+	<div data-role='footer' id="foot2" data-position='fixed' data-fullscreen="true">
+		<div data-role="navbar">
+	      <ul>
+	        <li><a href="#page1" data-icon="minus">训练</a></li>
+	        <li><a href="#page2" data-icon="plus">位置</a></li>
+	      </ul>
+	    </div>
+	</div>
+  	<!-- /footer -->
+</div> 
+
+<!-- div data-role="dialog" id="page_device_list">
+
+    <div data-role="header" data-theme="b">
+        <a href="#back" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
+        <h1>Cars</h1>
+    </div>
+    
+	<div data-role="content" class="ui-content" id='lstbtn'>
+        <ul data-role="listview" id='id_listview'>
+            <li data-icon="star" id="li_a_1"><a href="#" id="bmw" value='bmw1'><h3>BMW</h3><p>已连接</p></a> </li>
+            <li id="li_a_2"><a href="#page_device_detail"  id="landrover"><h3>Land Rover</h3><p>可连接</p></a></li>
+            <li id="li_b_1"><a href="#" id="tesla"><h3>Tesla</h3><p>不在范围内</p></a></li>
+            <li id="li_b_2"><a href="#" id="tesla"><h3>Tesla</h3><p>连接中</p></a></li>
+        </ul>
+    </div>
+</div-->
+
+
+
+<div data-role="dialog" id='page_device_detail'>
+  <div data-role="header" data-theme="a">
+  <a href="#back" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
+  <h1>edit</h1>
+  </div>
+  <div data-role="content">	
+      <div data-role="fieldcontain">
+        <label for="name">name：</label>
+        <input type="text" id="name" value='ray'>     
+          
+        <label for="psd">生日：</label>
+        <input type="password" name="psd" id="psd" value='1234'>
+      </div>
+  </div>
+</div>
+
+
+<div data-role="dialog" id="page_device_list2">
+
+    <!-- header -->
+    <div data-role="header" data-theme="b">
+        <a href="#back" data-rel="back" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-icon-shadow="false">Back</a>
+        <h1>Bluetooth</h1>
+    </div>
+    <!-- /header -->
+    
+    <!-- content -->
+    <div data-role="content" class="ui-content">
+        <ul data-role="listview" id="page_device_list1">
+        </ul>
+    </div>
+    <!-- /content -->
+</div>
+
+<div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
+  <p>Here is a <strong>tiny popup</strong> being used like a tooltip. The text will wrap to multiple lines as needed.</p>
+</div>
+
+<!-- leftpanel2  -->
+<div data-role="popup" id="alarm" class="ui-content"  data-theme="b">
+      <h1>Left Panel: Push</h1>
+      <p>I'm a simple popup</p>     
+</div>
+
+
+<!-- /leftpanel2 -->
+
+<audio id="myaudio">
+</audio>
+
+</body>
+</html>

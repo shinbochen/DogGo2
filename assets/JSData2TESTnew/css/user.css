@@ -1,0 +1,16 @@
+
+/* PNG icons */
+.ui-icon-vibration:after {
+	background-image: url(image/vibration.png);
+}
+.ui-icon-exec:after {
+	background-image: url(image/exec.png);
+}
+.cssgray{
+	color:#777
+} 
+.suppertext{
+	color:#070;
+	font-size:8px;
+	vertical-align:super;
+} 

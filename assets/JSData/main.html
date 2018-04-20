@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="css/user.css">
+<script src="js/jquery-1.8.3.min.js"></script>
+<script>
+    $(document).bind('mobileinit',function(){
+        $.mobile.pushStateEnabled = false;		 
+    });
+</script>
+<script src="js/jquery.mobile-1.4.5.js"></script>
+
+<script src="js/jquery.flot.js"></script>
+<script src="js/jquery.flot.time.js"></script>
+<script src="js/jquery.tmpl.js"></script>
+<script src="js/lang.js"></script>
+<script src="js/constant.js"></script>
+<script src="js/main.js"></script>
+</head>
+
+<script id="foottmpl" type="text/x-jquery-templ">
+    <div data-role="navbar">
+      <ul>
+		{{each items}}
+        <li><a href="#${page}" data-icon="${icon}" style="font-size: 8px; color:#550000" >${text}</a></li>
+		{{/each}}
+      </ul>
+    </div>
+</script>
+
+<script id="btntmpl" type="text/x-jquery-templ">	
+<fieldset data-role="controlgroup" data-type="horizontal"  data-mini="true">
+{{each items}}
+<label for="${id}"><img src="${src}"></img></label><input type="${type}" id="${id}"  data-mini="false" name="${name}" value="${value}" {{if checked}}checked{{/if}}>
+{{/each}}
+</fieldset>		
+</script>
+
+<script id="connectlsttmpl" type="text/x-jquery-templ">	
+{{each items}}
+<label for="${id}" addr="${address}"><b><font style="font-size: 10px; color:#000080">${name}</font></b>&nbsp;<img src='${rssiimg}'></img><span class='suppertext'>${rssival}</span>&nbsp;<img src='${batteryimg}'></img><span class='suppertext'>${batteryval}</span> <span class="ui-li-count"><img width=16 src='${sleepicon}'></img><img width=16 src='${barkicon}'></img><img width=16 src='${antilosticon}'></img>{{if states1}}${states1}{{/if}}</span></label><input type="checkbox" id="${id}" addr="${address}" name="${name}" {{if checked}}checked{{/if}}>
+{{/each}}
+</script>
+			
+<script id="devicelsttmpl" type="text/x-jquery-templ">
+{{each items}}
+<li class="${cls}" addr="${address}" state="${state}" rssi="${rssi}"><a href="#" class="ui-btn ui-btn-icon-right ui-icon-${icon}"><h1>${name}<img src='${rssiimg}'></img></h1><font style="font-size: 8px">${address}<span class='suppertext'>{{if rssival}}(${rssival}){{/if}}</span></font><p>${states}</p> </a> </li>
+{{/each}}
+</script>
+
+<script id="optiontmpl" type="text/x-jquery-templ">
+<label for="${id}">${label}</label>
+<input type="range" name="${name}" id="${id}" value="${value}" min="${min}" max="${max}" data-show-value="true">
+</script>
+	
+
+
+<body>
+<div data-role="page" id="page1">
+	
+  	<!-- header -->  
+	<div data-role="header">
+	   <h1>....</h1>
+	   <a href="#page3" class ="ui-btn-right" data-role="button" data-transition="slidedown" data-icon="plus" data-iconpos="notext"></a>
+	</div>  
+  	<!-- /header -->  
+  	 
+	<!-- content data-role="content" -->  
+  	<div  class="ui-btn">
+	  	<div data-role="collapsible" id="connected_section" data-mini=true>	  	
+		<legend><span id='connected_title' style="font-size: 9px">.</span></legend>
+			<fieldset data-role="controlgroup" data-type="vertical" id="connected_section1" >
+			</fieldset>	
+		</div>
+    		
+		<div id='option_section' class="ui-btn">
+					
+			<div id ='option_0'>
+	      	<h3 style="font-size: 9px">shock</h3>
+	        <input type="range" value="50" min="0" max="100" data-show-value="true" style="font-size: 9px">
+			</div>			
+			<div id ='option_1'>
+	      	<h3 style="font-size: 9px">vibration</h3>
+	        <input type="range" value="50" min="0" max="100" data-show-value="true" style="font-size: 9px">
+			</div>			
+			
+			<div id ='option_2' data-role="fieldcontain">
+	      <h3 style="font-size: 9px">voice</h3>
+		    <select data-mini=true>
+		    </select>
+				<input type="range" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px">
+			</div>
+		
+			<div id ='option_3'>
+	      <h3 style="font-size: 9px">slient</h3>
+	      <div data-role="collapsible" data-mini=true>
+	      	<h6>input</h6>
+		      <div class="ui-grid-a">
+		      	<div class="ui-block-a">
+						<label for="op_vid_30" id='op_label30' style="font-size: 9px"></label>
+						<input type="range" id="op_vid_30" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px">
+						</div>
+						
+		      	<div class="ui-block-b">
+						<label for="op_vid_31" id='op_label31' style="font-size: 9px"></label>
+						<input type="range" id="op_vid_31" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px">
+						</div>	
+							
+					</div>
+				
+				</div>
+				
+	      <div data-role="collapsible" data-mini=true>
+	      	<h6>control</h6>
+					<div data-role="controlgroup" data-type="horizontal">
+						<label for="option_3_btn2" style="font-size: 9px"><img src='css/image/vibration.png'></img></label>
+						<input type="checkbox" id="option_3_btn2" data-mini="true">
+						<label for="option_3_btn1" style="font-size: 9px"><img src='css/image/shock.png'></img></label>
+						<input type="checkbox" id="option_3_btn1" data-mini="true" >
+					</div>
+				
+		      <div class="ui-grid-a">
+		      	
+		      	<div class="ui-block-a">
+						<label for="op_vid_33" id='op_label33' style="font-size: 9px">Option2</label>
+						<input type="range" id="op_vid_33" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px">
+						</div>	
+						
+		      	<div class="ui-block-b">
+						<label for="op_vid_32" id='op_label32' style="font-size: 9px">Option</label>
+						<input type="range" id="op_vid_32" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px">
+						</div>
+						
+							
+					</div>
+				</div>
+			</div>
+			
+			<div id='option_4' data-theme="b" >
+	      	<h3 style="font-size: 9px">anti lost</h3>
+	      	<fieldset data-role="controlgroup">
+	      	<div>
+					<select data-role="slider" id="op4_onoff" data-mini=true data-corners=false data-track-theme=f data-theme=b>
+					  <option value="off">Off</option>
+					  <option value="on">On</option>
+					</select>	    
+	      	</div>
+	      	<div id="op40_div">
+		      <select data-role="slider" id="op4_onoff2" data-mini=true>
+					  <option value="off">Off</option>
+					  <option value="on">On</option>
+					</select>   
+					<select data-role="slider" id="op4_onoff3" data-mini=true>
+					  <option value="off">Off</option>
+					  <option value="on">On</option>
+					</select> 
+				</div>
+				</fieldset>
+					<div id="op4_div">     
+						<label for="op4_onoff3" id="op_label4distance" style="font-size: 9px">distance</label>
+						<input id="op4_distance" type="range" value="50" min="0" max="100" data-show-value="true">
+					
+					 	<div data-role="collapsible" id="op42_div" data-mini=true>
+			      	<h6>mobile attetion</h6>
+			      	
+							<label for="op4_vibrate" id="op_label4vibrate" style="font-size: 9px">vibration</label>
+				      <select data-role="slider" id="op4_vibrate" style="font-size: 9px" data-mini=true>
+							  <option value="off">Off</option>
+							  <option value="on">On</option>
+							</select>   
+					    <select id="op4_musiclst" data-mini=true>
+					    </select>
+				   	</div>
+			    
+			    
+				    <div data-role="collapsible" id="op43_div" data-mini=true>
+		      	<h6>device control</h6>
+							<div data-role="controlgroup" data-type="horizontal">
+								<label for="option_4_btn3"><img src='css/image/voice.png'></img></label>
+								<input type="checkbox" id="option_4_btn3" data-mini="true">
+								<label for="option_4_btn2"><img src='css/image/vibration.png'></img></label>
+								<input type="checkbox" id="option_4_btn2" data-mini="true">
+								<label for="option_4_btn1"><img src='css/image/shock.png'></img></label>
+								<input type="checkbox" id="option_4_btn1" data-mini="true" >
+							</div>
+					
+				      <div class="ui-grid-a" >
+								
+				      	<div class="ui-block-a" id="op433a_div" >
+				      		
+									<label for="op4_voicelst" id='op_label43a' style="font-size: 9px" >voice type</label>
+								 	<select id="op4_voicelst" data-mini=true ></select>
+						    </div>
+								
+				      	<div class="ui-block-b" id="op433b_div">
+								<label for="op_vid_43b" id='op_label43b' style="font-size: 9px">voice level</label>
+								<input type="range" id="op_vid_43b" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px" >
+								</div>	
+								
+				      	<div class="ui-block-a" id="op432_div" style="font-size: 9px">
+								<label for="op_vid_42" id='op_label42' style="font-size: 9px" >vibration level</label>
+								<input type="range" id="op_vid_42" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true" style="font-size: 9px" >
+								</div>	
+				      	
+				      	<div class="ui-block-b" id="op431_div">
+								<label for="op_vid_41" id='op_label41' style="font-size: 9px" >shock level</label>
+								<input type="range" id="op_vid_41" value="50" min="0" max="100" data-popup-enabled="true" data-show-value="true">
+								</div>
+									
+							</div>
+						</div>
+			    
+			    </div>
+					
+			</div>
+			
+			<div id ='option_5'>
+	      	<h3 style="font-size: 9px">sleep settting</h3>
+	      	<div>
+					<select data-role="slider" id="op5_onoff" data-mini=true data-corners=false data-track-theme=f data-theme=b>
+					  <option value="off">Off</option>
+					  <option value="on">On</option>
+					</select>	    
+	      	</div>
+	      	
+	      	<div id="op51_div" class="ui-grid-a">
+	      	<div class="ui-block-a"><label for="start">start:</label> <input name="start" type="text"></div>
+	      	<div class="ui-block-b"><label for="end">end:</label><input name="end" type="text"></div>
+	      	</div>
+	      	
+	      	<span style="font-size: 6px">while enable this setting.device will </br>disable wifi work untill sleep end</span>
+			</div>	
+			
+		</div>
+	
+		<div id='btn_section'>
+		</div>	
+		<div id='btn_section2' data-role="controlgroup" data-type="horizontal"  data-mini="true">	
+			<a href="" data-role="button" data-mini="false"></a>
+		</div>
+		
+  	</div>     	
+  	
+	<!-- /content -->   
+  
+	<!-- footer -->
+	<div data-role='footer' id="foot1" data-position='fixed' data-fullscreen="true">
+	</div>
+	<!-- /footer -->
+</div> 
+
+
+<div data-role="page" id="page2">
+
+	<!-- content -->
+	<div data-role="content" id="placeholder">    
+	</div>    
+	<!-- /content -->
+	
+	<!-- footer -->
+	<div data-role='footer' id="foot2" data-position='fixed' data-fullscreen="true">
+	</div>
+	<!-- /footer -->
+</div> 
+
+<div data-role="page" id="page3">
+	
+	<!-- header -->  
+	<div data-role="header">
+		<h1>...</h1>
+		<button id="id_scan" data-icon="refresh" class ="ui-btn-right">scan</button>
+	</div>
+	<!-- /header -->  
+	<!-- content -->
+	<div style="height:5px"></div>
+	<div id="page_device_list">   		
+		<ul data-role="listview" id="page_device_list1">
+		</ul>
+		<ul data-role="listview" id="page_device_list2">
+		</ul>
+		<ul data-role="listview" id="page_device_list3">
+		</ul>
+		<ul data-role="listview" id="page_device_list4">
+		</ul>
+	</div>    
+	
+	<!-- /content -->	
+	<!-- footer -->
+	<div data-role='footer' id="foot3" data-position='fixed' data-fullscreen="true">
+	</div>
+	<!-- /footer -->
+</div> 
+
+<div data-role="dialog" id='page_device_detail'>
+	
+    <!-- header -->
+	<div data-role="header" data-theme="a">
+	<a href="#back" data-rel="back" data-icon="delete" data-iconpos="notext"></a>
+	<h1>...</h1>
+	<a href="#back" data-rel="back" id="btn_edit_ok" data-icon="check" data-iconpos="notext"></a>
+	</div>
+    <!-- /header -->
+    
+    <!-- content -->
+	<div data-role="content">	
+      <div data-role="fieldcontain" id='page_device_detail1'>
+        <label for="name">name£º</label>
+        <input type="text" id="device_name" value='ray'>     
+          
+        <label for="device_psd">password£º</label>
+        <input type="password" name="psd" id="device_psd" value='1234'>   
+        
+        <input type="hidden" name="addr" id="device_addr" value='1234'>    
+      </div>
+	</div>
+    <!-- /content -->
+</div>
+
+
+<div data-role="dialog" id="alarm">
+	<div data-role="header">
+		<a href="#" data-rel="back" data-icon="delete" data-iconpos="notext"></a>
+		<h1>Alarm</h1>
+	</div>
+	
+	<div data-role="content">	
+		<h3>I'm a simple popup</h3>    
+		<a href="#" data-rel="back" id='iknow' class="ui-btn">I know it</a>
+  </div>
+</div>
+
+</body>
+</html>
